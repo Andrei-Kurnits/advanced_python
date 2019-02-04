@@ -2,9 +2,9 @@ class MyMeta(type):
 
     def __new__(cls, name, bases, classdict):
         variables = dict()
-        for entry in classdict.items():
-            if entry[0].startswith('get_') or entry[0].startswith('set_') or entry[0].startswith('del_'):
-                var = entry[0][4:]
+        for e in classdict.items():
+            if e[0].startswith('get_') or e[0].startswith('set_') or e[0].startswith('del_'):
+                var = e[0][4:]
                 getter = None
                 setter = None
                 deleter = None
@@ -49,4 +49,3 @@ ex.z = 666
 print(ex.x)
 print(ex.y)
 # print(ex.z)
-
