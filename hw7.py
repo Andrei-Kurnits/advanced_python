@@ -1,40 +1,52 @@
 class MyMeta(type):
 
     def __new__(cls, name, bases, classdict):
-        print("Meta new")
-        classdict['getx'] = MyMeta.getx
-        classdict['setx'] = MyMeta.setx
-        classdict['delx'] = MyMeta.delx
+        variables = dict()
+        for entry in classdict.items():
+            if entry[0].startswith('get_') or entry[0].startswith('set_') or entry[0].startswith('del_'):
+                var = entry[0][4:]
+                getter = None
+                setter = None
+                deleter = None
+                for e in classdict.items():
+                    if e[0].startswith('get_') and e[0][4:] == var:
+                        getter = e[1]
+                    if e[0].startswith('set_') and e[0][4:] == var:
+                        setter = e[1]
+                    if e[0].startswith('det_') and e[0][4:] == var:
+                        deleter = e[1]
+                variables.update({var: property(getter, setter, deleter)})
+        for i in variables.items():
+            print(i)
+        classdict.update(variables)
         return type.__new__(cls, name, bases, classdict)
 
     def __init__(cls, name, bases, classdict):
-        print("Meta init")
-        cls.__x = None
         type.__init__(cls, name, bases, classdict)
 
-    def getx(self):
-        return self.__x
 
-    def setx(self, value):
-        self.__x = value
+class Example(metaclass=MyMeta):
 
-    def delx(self):
-        del self.__x
-
-
-class MyClass(metaclass=MyMeta):
     def __init__(self):
-        print("MyClass.__init__")
+        self._x = None
+
+    def get_x(self):
+        return self._x
+
+    def set_x(self, value):
+        self._x = value
+
+    def get_y(self):
+        return 'y'
+
+    def set_z(self, val):
+        self._z = val
 
 
-o1 = MyClass()
-o2 = MyClass()
-
-o1.setx(666)
-o2.setx(111)
-# print(o1.__x, o2.__x)
-print(o1.getx(), o2.getx())
-
-print(dir(MyClass))
-print(dir(o1))
+ex = Example()
+ex.x = 255
+ex.z = 666
+print(ex.x)
+print(ex.y)
+# print(ex.z)
 
