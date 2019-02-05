@@ -3,7 +3,9 @@ class MyMeta(type):
     def __new__(cls, name, bases, classdict):
         variables = dict()
         for e in classdict.items():
-            if e[0].startswith('get_') or e[0].startswith('set_') or e[0].startswith('del_'):
+            if e[0].startswith('get_') \
+                    or e[0].startswith('set_') \
+                    or e[0].startswith('del_'):
                 var = e[0][4:]
                 getter = None
                 setter = None
