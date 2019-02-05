@@ -1,4 +1,4 @@
-class Exchanger:
+class Exchanger(object):
     _base = None
 
     @staticmethod
@@ -20,10 +20,11 @@ class ExchangerOnline(Exchanger):
 
     @staticmethod
     def request_exchange_data():
-        import urllib.request
         import json
-        access_key = "618af75c65d8fff43dda6794e6dee22e"
-        content = urllib.request.urlopen("http://www.apilayer.net/api/live?access_key={}".format(access_key)).read()
+        import urllib.request
+        ak = "618af75c65d8fff43dda6794e6dee22e"
+        url = "http://www.apilayer.net/api/live?access_key={}".format(ak)
+        content = urllib.request.urlopen(url).read()
         data = json.loads(content.decode('utf-8'))
         return data
 
@@ -54,7 +55,7 @@ class ExchangerOnline(Exchanger):
         return base
 
 
-class Money:
+class Money(object):
 
     _exchanger = ExchangerOnline
 
@@ -87,11 +88,11 @@ class Money:
 if __name__ == "__main__":
 
     x = Money(10, "BYN")
-    y = Money(11) # define your own default value, e.g. “USD”
+    y = Money(11)  # define your own default value, e.g. “USD”
     z = Money(12.34, "EUR")
 
-    print(z + 3.11*x + y*0.8)  # result in “EUR”
+    print(z + 3.11 * x + y * 0.8)  # result in “EUR”
 
-    lst = [Money(10,"BYN"), Money(11), Money(12.01, "JPY")]
+    lst = [Money(10, "BYN"), Money(11), Money(12.01, "JPY")]
     s = sum(lst)
     print(s)  # result in “BYN”
